@@ -31,6 +31,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     Logger log = LoggerFactory.getLogger(CustomAuthorizationFilter.class);
 
+    public static final String SECRET = "secret";
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //allow request on login endpoint do not intercept
@@ -45,7 +47,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 try{
                     //to get the actual token, we remove the prefix "bearer"
                     String token = authorizationHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                    Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
 

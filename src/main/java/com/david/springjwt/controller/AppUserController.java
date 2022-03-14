@@ -25,7 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -42,12 +44,15 @@ public class AppUserController {
     private final AuthenticationManager authenticationManager;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    public static final String SECRET = "secret";
+
     Logger log = LoggerFactory.getLogger(AppUserController.class);
 
     public AppUserController(AppUserService appUserService, AuthenticationManager authenticationManager, BCryptPasswordEncoder bCryptPasswordEncoder){
         this.appUserService = appUserService;
         this.authenticationManager = authenticationManager;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+
     }
 
 //    @ApiOperation("To login")
@@ -149,7 +154,7 @@ public class AppUserController {
             try{
                 //to get the actual token, we remove the prefix "bearer"
                 String refresh_token = authorizationHeader.substring("Bearer ".length());
-                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes());
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refresh_token);
 

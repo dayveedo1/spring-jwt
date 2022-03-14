@@ -5,17 +5,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
+@Table(name = "AppUser")
 public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
+    @Column(name = "id")
     private Long id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "username")
     private String username;
+    @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
     public AppUser() {
